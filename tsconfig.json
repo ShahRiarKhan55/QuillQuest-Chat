@@ -30,7 +30,7 @@
     ".next/types/**/*.ts",
     "app/**/*.ts", // Update this line
     "app/**/*.tsx", // Update this line
-    "app/api/auth/[...nextauth]/route"
+    "app/api/auth/[...nextauth]/route.ts"
   ],
   "exclude": ["node_modules"]
 }
