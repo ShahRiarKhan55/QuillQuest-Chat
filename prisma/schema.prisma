@@ -1,0 +1,130 @@
+// Define the client configuration for Prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Define the data source for MongoDB, using the provided environment variable for the connection URL
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// Define the User model with various fields and relationships
+model User {
+  // User ID field with MongoDB-specific configurations
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  // User name field
+  name           String?
+  // User email field with uniqueness constraint
+  email          String?   @unique
+  // Date and time when the user's email was verified
+  emailVerified  DateTime?
+  // User image URL field
+  image          String?
+  // Hashed password field for user authentication
+  hashedPassword String?
+  // Date and time when the user was created
+  createdAt      DateTime  @default(now())
+  // Date and time when the user was last updated
+  updatedAt      DateTime  @updatedAt
+
+  // Array of conversation IDs associated with the user
+  conversationIds String[]       @db.ObjectId
+  // Relation to the Conversation model using the conversationIds field
+  conversations   Conversation[] @relation(fields: [conversationIds], references: [id])
+
+  // Array of seen message IDs associated with the user
+  seenMessageIds String[]  @db.ObjectId
+  // Relation to the Message model with the "Seen" relation alias
+  seenMessages   Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
+
+  // Relation to the Account model through the userId field
+  accounts Account[]
+  // Relation to the Message model through the userId field
+  messages Message[]
+}
+
+// Define the Account model with various fields and relationships
+model Account {
+  // Account ID field with MongoDB-specific configurations
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  // User ID field associated with the account
+  userId            String  @db.ObjectId
+  // Type of account
+  type              String
+  // Provider of the account
+  provider          String
+  // Provider-specific account ID
+  providerAccountId String
+  // Refresh token for the account
+  refresh_token     String? @db.String
+  // Access token for the account
+  access_token      String? @db.String
+  // Expiry timestamp for the access token
+  expires_at        Int?
+  // Token type of the account
+  token_type        String?
+  // Scope of the account
+  scope             String?
+  // Provider-specific ID token
+  id_token          String? @db.String
+  // Provider-specific session state
+  session_state     String?
+
+  // Relation to the User model through the userId field with cascade deletion
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Unique constraint on the combination of provider and providerAccountId
+  @@unique([provider, providerAccountId])
+}
+
+// Define the Conversation model with various fields and relationships
+model Conversation {
+  // Conversation ID field with MongoDB-specific configurations
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  // Date and time when the conversation was created
+  createdAt     DateTime @default(now())
+  // Date and time of the last message in the conversation
+  lastMessageAt DateTime @default(now())
+  // Name of the conversation (nullable)
+  name          String?
+  // Boolean indicating whether the conversation is a group
+  isGroup       Boolean?
+
+  // Array of message IDs associated with the conversation
+  messagesIds String[]  @db.ObjectId
+  // Relation to the Message model using the messagesIds field
+  messages    Message[]
+
+  // Array of user IDs associated with the conversation
+  userIds String[] @db.ObjectId
+  // Relation to the User model using the userIds field
+  users   User[]   @relation(fields: [userIds], references: [id])
+}
+
+// Define the Message model with various fields and relationships
+model Message {
+  // Message ID field with MongoDB-specific configurations
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  // Body text of the message
+  body      String?
+  // Image URL associated with the message
+  image     String?
+  // Date and time when the message was created
+  createdAt DateTime @default(now())
+
+  // Array of user IDs who have seen the message
+  seenIds String[] @db.ObjectId
+  // Relation to the User model with the "Seen" relation alias
+  seen    User[]   @relation("Seen", fields: [seenIds], references: [id])
+
+  // User ID associated with the conversation
+  conversationId String       @db.ObjectId
+  // Relation to the Conversation model using the conversationId field with cascade deletion
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  // User ID of the message sender
+  senderId String @db.ObjectId
+  // Relation to the User model using the senderId field with cascade deletion
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
