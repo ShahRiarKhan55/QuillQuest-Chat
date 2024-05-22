@@ -73,12 +73,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 text-base 
                 font-semibold 
                 leading-7 
-                text-gray-900
+                text-white
               "
             >
               Profile
             </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">
+            <p className="mt-1 text-sm leading-6 text-gray-400">
               Edit your public information.
             </p>
 
@@ -99,7 +99,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     text-sm 
                     font-medium 
                     leading-6 
-                    text-gray-900
+                    text-white
                   "
                 >
                   Photo

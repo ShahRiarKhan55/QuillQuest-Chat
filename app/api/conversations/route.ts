@@ -18,6 +18,13 @@ export async function POST(request: Request) {
       return new NextResponse("Invalid data", { status: 400 });
     }
 
+    // const newMemberList = [];
+    // const emailList = members;
+    // for (const email of emailList) {
+    //   const newMember = await prisma.user.findFirst({ email: email });
+    //   newMemberList.
+    // }
+
     if (isGroup) {
       const newConversation = await prisma.conversation.create({
         data: {

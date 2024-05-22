@@ -12,15 +12,15 @@ const Auth = () => {
         py-12 
         sm:px-6 
         lg:px-8 
-        bg-gray-100
+        bg-black
       "
     >
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Image
-          height="80"
-          width="80"
+          height="125"
+          width="125"
           className="mx-auto w-auto"
-          src="/images/logo.png"
+          src="/images/QUILL.png"
           alt="Logo"
         />
         <h2
@@ -30,7 +30,7 @@ const Auth = () => {
             text-3xl 
             font-bold 
             tracking-tight 
-            text-gray-900
+            text-white
           "
         >
           Sign in to your account
